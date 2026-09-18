@@ -30,6 +30,7 @@ banking-tools-assignment/
 │   ├── __init__.py
 │   ├── config.py
 │   ├── tools.py
+│   ├── prompt.py
 │   └── agent.py
 └── tests/
     └── test_tools.py
@@ -42,7 +43,7 @@ banking-tools-assignment/
 3. Criar uma chave gratuita no Groq seguindo `GROQ_SETUP.md` fornecido.
 4. Implementar a função `search_banking_products` em `src/tools.py`.
 5. Definir o schema da tool para o modelo poder chamá-la.
-6. Criar o `SYSTEM_PROMPT` em `src/agent.py`.
+6. Criar o `SYSTEM_PROMPT` em `src/prompt.py`.
 7. Implementar o ciclo de tool calling: enviar a pergunta, detetar a chamada da tool, executar a pesquisa e enviar o resultado de volta ao modelo.
 8. Apresentar uma resposta final curta em português.
 9. Adicionar testes para pesquisa por nome, categoria e ausência de resultados.
@@ -62,6 +63,7 @@ O ficheiro contém produtos fictícios com as colunas:
 - `target_customer`
 
 A tool deve aceitar uma pesquisa textual e devolver apenas os registos relevantes. A pesquisa pode considerar `product_name`, `category`, `description` e `target_customer`.
+O utilizador pode fazer perguntas em linguagem natural; não precisa de conhecer o nome exato de um produto. Cabe ao agente transformar a pergunta em termos úteis para a pesquisa.
 
 ## Regras do agente
 
@@ -72,6 +74,7 @@ A tool deve aceitar uma pesquisa textual e devolver apenas os registos relevante
 - Não pede passwords, PINs ou códigos de autenticação.
 - Responde em português e em no máximo três frases.
 - Não deve chamar a tool para perguntas que não estejam relacionadas com produtos bancários.
+- Não deve receber nem memorizar previamente a lista completa de produtos; deve consultar a tool quando precisar dos dados.
 
 ## Instalação
 
