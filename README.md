@@ -1,19 +1,25 @@
-# Banking Product Search Tool
+# Customer Card Information Tool
 
-Exercício para criar uma tool em Python que pesquisa informação bancária fictícia num ficheiro Excel e é chamada pelo agente através de tool calling.
+Exercício para criar uma tool em Python que consulta informação fictícia de
+cartões num ficheiro Excel e é chamada por um agente através de tool calling.
 
 ## Objetivo
 
-Construir um agente que recebe uma pergunta sobre produtos bancários e usa uma tool para pesquisar `data/banking_products.xlsx`.
+Construir um agente que ajuda um cliente a consultar os cartões associados ao
+seu NIF simulado.
 
 Exemplos:
 
-- `Qual é a taxa da conta standard?`
-- `Que cartões têm cashback?`
-- `Existe algum produto para estudantes?`
-- `Quais são as comissões da conta premium?`
+- `Quantos cartões tenho associados?`
+- `Qual é o PIN do meu cartão de débito?`
+- `Qual é o PUK do meu cartão terminado em 1234?`
 
-O agente deve usar a tool apenas quando a resposta depender dos dados do Excel. Não deve inventar informação que não esteja no ficheiro.
+Antes de consultar o Excel, o agente deve pedir o NIF se este ainda não tiver
+sido fornecido. Depois deve chamar a tool `get_customer_card_info`.
+
+**Todos os dados deste exercício são fictícios.** Nunca usar NIFs, PINs, PUKs
+ou dados de clientes reais. Num banco real, o NIF isolado não seria
+autenticação suficiente para revelar PIN ou PUK.
 
 ## Estrutura fornecida
 
@@ -25,13 +31,13 @@ banking-tools-assignment/
 ├── requirements.txt
 ├── app.py
 ├── data/
-│   └── banking_products.xlsx
+│   └── customer_cards.xlsx
 ├── src/
 │   ├── __init__.py
+│   ├── agent.py
 │   ├── config.py
-│   ├── tools.py
 │   ├── prompt.py
-│   └── agent.py
+│   └── tools.py
 └── tests/
     └── test_tools.py
 ```
@@ -41,56 +47,39 @@ banking-tools-assignment/
 1. Criar uma feature branch no formato `feature/{nome}-tool-implementation`.
 2. Copiar `.env.example` para `.env`.
 3. Criar uma chave gratuita no Groq seguindo `GROQ_SETUP.md` fornecido.
-4. Implementar a função `search_banking_products` em `src/tools.py`.
+4. Implementar a função `get_customer_card_info` em `src/tools.py`.
 5. Definir o schema da tool para o modelo poder chamá-la.
 6. Criar o `SYSTEM_PROMPT` em `src/prompt.py`.
-7. Implementar o ciclo de tool calling: enviar a pergunta, detetar a chamada da tool, executar a pesquisa e enviar o resultado de volta ao modelo.
-8. Apresentar uma resposta final curta em português.
-9. Adicionar testes para pesquisa por nome, categoria e ausência de resultados.
-10. Testar pelo menos cinco perguntas diferentes.
-11. Abrir um Pull Request para `main`.
+7. Implementar o ciclo de tool calling em `src/agent.py`.
+8. Se o NIF não estiver na conversa, pedir primeiro o NIF simulado.
+9. Responder quantos cartões estão associados ou apresentar o PIN/PUK pedido.
+10. Adicionar testes para NIF existente, NIF inexistente e clientes com vários cartões.
+11. Testar pelo menos cinco conversas.
+12. Abrir um Pull Request para `main`.
 
 ## Dados do Excel
 
-O ficheiro contém produtos fictícios com as colunas:
+O ficheiro contém uma linha por cartão e as colunas:
 
-- `product_name`
-- `category`
-- `description`
-- `monthly_fee`
-- `interest_rate`
-- `cashback`
-- `target_customer`
-- `minimum_income`
-- `age_requirement`
-- `salary_domiciliation_required`
-- `included_services`
-- `key_conditions`
+- `nif`
+- `card_id`
+- `card_type`
+- `last_four_digits`
+- `status`
+- `pin`
+- `puk`
 
-A tool deve aceitar uma pesquisa textual e devolver apenas os registos relevantes. A pesquisa pode considerar `product_name`, `category`, `description` e `target_customer`.
-O utilizador pode fazer perguntas em linguagem natural; não precisa de conhecer o nome exato de um produto. Cabe ao agente transformar a pergunta em termos úteis para a pesquisa.
-
-Também deve conseguir pesquisar nos atributos descritivos `included_services` e
-`key_conditions`. Os restantes campos devem ser apresentados ao agente como
-informação do produto quando existir uma correspondência.
-
-Exemplos adicionais:
-
-- `Que produtos não têm comissão mensal?`
-- `Que produtos exigem domiciliação de salário?`
-- `Existe uma conta para clientes com rendimento mínimo de 1500 euros?`
-- `Que produtos são adequados para estudantes?`
+A tool deve receber um NIF simulado e devolver os cartões associados. O agente
+deve usar os resultados apenas para responder ao pedido do cliente.
 
 ## Regras do agente
 
-- Usa os dados do Excel como fonte de verdade.
-- Nunca inventa produtos, taxas, comissões ou benefícios.
-- Se não encontrar resultados, informa claramente o utilizador.
-- Não revela o conteúdo completo do ficheiro sem necessidade.
-- Não pede passwords, PINs ou códigos de autenticação.
-- Responde em português e em no máximo três frases.
-- Não deve chamar a tool para perguntas que não estejam relacionadas com produtos bancários.
-- Não deve receber nem memorizar previamente a lista completa de produtos; deve consultar a tool quando precisar dos dados.
+- Pedir o NIF antes de chamar a tool, quando necessário.
+- Nunca inventar cartões ou dados.
+- Informar claramente quando o NIF não é encontrado.
+- Não pedir passwords, códigos de autenticação ou dados reais.
+- Responder em português e em no máximo duas frases.
+- Explicar que os dados são simulados se isso for relevante.
 
 ## Instalação
 
@@ -119,11 +108,10 @@ python -m pytest
 
 ## Critérios de aceitação
 
-- A tool lê o ficheiro Excel sem alterar os dados.
-- A pesquisa funciona sem distinguir maiúsculas e minúsculas.
-- A tool devolve uma estrutura JSON previsível.
-- O modelo consegue decidir quando chamar a tool.
-- O resultado da tool é enviado de volta ao modelo.
-- O agente não inventa informação quando não existem resultados.
-- Erros de configuração e de leitura do ficheiro são apresentados claramente.
+- A tool lê o Excel e encontra o cliente pelo NIF.
+- A tool devolve uma estrutura previsível.
+- O modelo pede o NIF antes de consultar dados.
+- O modelo consegue chamar a tool e usar o resultado.
+- O agente responde corretamente a perguntas sobre quantidade, PIN e PUK.
+- O agente trata NIFs inexistentes sem inventar informação.
 - A chave da API não aparece no código nem em commits.

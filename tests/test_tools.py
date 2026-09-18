@@ -1,6 +1,5 @@
-from src.tools import search_banking_products
+from src.tools import get_customer_card_info
 
 
-def test_search_is_not_implemented_yet():
-    """Replace this placeholder with tests for the Excel search tool."""
-    assert callable(search_banking_products)
+def test_card_lookup_is_callable():
+    assert callable(get_customer_card_info)

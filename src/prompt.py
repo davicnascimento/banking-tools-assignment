@@ -1,5 +1,5 @@
 SYSTEM_PROMPT = """TODO: escrever o system prompt do agente.
 
-O agente deve usar a tool search_banking_products quando necessário e responder
-em português sem inventar informação.
+O agente deve pedir o NIF simulado antes de usar a tool e responder apenas com
+base nos resultados devolvidos pela tool.
 """

@@ -1,8 +1,10 @@
 from pathlib import Path
 
-DATA_FILE = Path(__file__).parent.parent / "data" / "banking_products.xlsx"
+import pandas as pd
+
+DATA_FILE = Path(__file__).parent.parent / "data" / "customer_cards.xlsx"
 
 
-def search_banking_products(query: str) -> list[dict]:
-    """TODO: pesquisar produtos no ficheiro Excel e devolver os resultados."""
-    raise NotImplementedError("Implementar a pesquisa no Excel")
+def get_customer_card_info(nif: str) -> list[dict]:
+    """TODO: devolver os cartões associados ao NIF simulado."""
+    raise NotImplementedError("Implementar a consulta de cartões no Excel")
