@@ -12,14 +12,14 @@ Exemplos:
 
 - `Quantos cartões tenho associados?`
 - `Qual é o PIN do meu cartão de débito?`
-- `Qual é o PUK do meu cartão terminado em 1234?`
+- `Qual é a data de validade do meu cartão terminado em 1234?`
 
 Antes de consultar o Excel, o agente deve pedir o NIF se este ainda não tiver
 sido fornecido. Depois deve chamar a tool `get_customer_card_info`.
 
-**Todos os dados deste exercício são fictícios.** Nunca usar NIFs, PINs, PUKs
-ou dados de clientes reais. Num banco real, o NIF isolado não seria
-autenticação suficiente para revelar PIN ou PUK.
+**Todos os dados deste exercício são fictícios.** Nunca usar NIFs, PINs ou
+dados de clientes reais. Num banco real, o NIF isolado não seria autenticação
+suficiente para revelar dados sensíveis do cartão.
 
 ## Estrutura fornecida
 
@@ -52,7 +52,7 @@ banking-tools-assignment/
 6. Criar o `SYSTEM_PROMPT` em `src/prompt.py`.
 7. Implementar o ciclo de tool calling em `src/agent.py`.
 8. Se o NIF não estiver na conversa, pedir primeiro o NIF simulado.
-9. Responder quantos cartões estão associados ou apresentar o PIN/PUK pedido.
+9. Responder quantos cartões estão associados ou apresentar o PIN/data de validade pedido.
 10. Adicionar testes para NIF existente, NIF inexistente e clientes com vários cartões.
 11. Testar pelo menos cinco conversas.
 12. Abrir um Pull Request para `main`.
@@ -67,7 +67,7 @@ O ficheiro contém uma linha por cartão e as colunas:
 - `last_four_digits`
 - `status`
 - `pin`
-- `puk`
+- `expiry_date`
 
 A tool deve receber um NIF simulado e devolver os cartões associados. O agente
 deve usar os resultados apenas para responder ao pedido do cliente.
@@ -112,6 +112,6 @@ python -m pytest
 - A tool devolve uma estrutura previsível.
 - O modelo pede o NIF antes de consultar dados.
 - O modelo consegue chamar a tool e usar o resultado.
-- O agente responde corretamente a perguntas sobre quantidade, PIN e PUK.
+- O agente responde corretamente a perguntas sobre quantidade, PIN e data de validade.
 - O agente trata NIFs inexistentes sem inventar informação.
 - A chave da API não aparece no código nem em commits.
