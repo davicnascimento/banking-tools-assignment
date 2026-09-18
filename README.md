@@ -61,9 +61,25 @@ O ficheiro contém produtos fictícios com as colunas:
 - `interest_rate`
 - `cashback`
 - `target_customer`
+- `minimum_income`
+- `age_requirement`
+- `salary_domiciliation_required`
+- `included_services`
+- `key_conditions`
 
 A tool deve aceitar uma pesquisa textual e devolver apenas os registos relevantes. A pesquisa pode considerar `product_name`, `category`, `description` e `target_customer`.
 O utilizador pode fazer perguntas em linguagem natural; não precisa de conhecer o nome exato de um produto. Cabe ao agente transformar a pergunta em termos úteis para a pesquisa.
+
+Também deve conseguir pesquisar nos atributos descritivos `included_services` e
+`key_conditions`. Os restantes campos devem ser apresentados ao agente como
+informação do produto quando existir uma correspondência.
+
+Exemplos adicionais:
+
+- `Que produtos não têm comissão mensal?`
+- `Que produtos exigem domiciliação de salário?`
+- `Existe uma conta para clientes com rendimento mínimo de 1500 euros?`
+- `Que produtos são adequados para estudantes?`
 
 ## Regras do agente
 
